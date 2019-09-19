@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>留言板</title>
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.css">
+    <style>
+        .btn-add-style {
+            margin-bottom: 10px;
+        }
+        .btn-add-style a {
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>留言板 <small>--服务端渲染demo</small></h1>
+        </div>
+        <button type="button" class="btn btn-primary btn-add-style"><a href="/post">新增反馈</a></button>
+        <ul class="list-group">
+            {{each feedback as value i}}
+                <li class="list-group-item" >
+                    <div class="row">
+                        <span class="col-md-4 col-xs-12">留言人：{{ value.title }}</span>
+                        <span class="col-md-5 col-xs-12">内容：{{ value.content }}</span>
+                        <span class="col-md-3 col-xs-12">时间：{{ value.time }}</span>
+                    </div> 
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+
+    <script>
+        window.onload = function () {
+            setTimeout(() => {
+                const xhr= new XMLHttpRequest();
+                xhr.open('GET', '/getList', true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            
+                        } 
+                    }
+                }
+                xhr.send();
+            })
+        }
+    </script>
+</body>
+</html>

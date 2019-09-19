@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>留言板</title>
+    <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.css">
+    <style>
+        div.content {
+            margin-top: 20px;
+        }
+        div.content,
+        div.content textarea {
+            width: 100%;
+            height: 300px;
+        }
+        .btn-add-style {
+            display: block;
+            margin: 10px auto;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>留言板 <small>--服务端渲染demo</small></h1>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">留言人</span>
+            <input type="text" class="form-control title-inp" placeholder="请输入您的昵称" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group content">
+            <textarea type="text" class="form-control content-text" placeholder="请输入反馈内容" aria-describedby="basic-addon1"></textarea>
+        </div>
+        <button type="button" class="btn btn-success btn-lg btn-add-style submit">提交</button>
+    </div>
+
+
+    <script>
+        const title_inp = document.getElementsByClassName('title-inp')[0];
+        const content_text = document.getElementsByClassName('content-text')[0];
+        const submit = document.getElementsByClassName('submit')[0];
+        const xhr = new XMLHttpRequest();
+
+        function ajax (url, data) {
+            return new Promise ((res, rej) => {
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            res(xhr.responseText);
+                        } else {
+                            rej('请求失败!');
+                        }
+                    }
+                }
+                xhr.send(`title=${data.title}&content=${data.content}`);
+            })
+            
+        }
+        
+        submit.onclick = function () {
+            const title = title_inp.value;
+            const content = content_text.value;
+            if (title === '' || content === '') {
+                window.alert('请输入完整信息!');
+                return;
+            }
+
+            ajax('/postInfo', {
+                title,
+                content
+            }).then(res => {
+                title_inp.value = '';
+                content_text.value = '';
+                if (res === 'ok') {
+                    window.location.href = '/'
+                    window.alert('提交成功!');
+                }
+            }, err => {
+                window.alert(err);
+            })
+        }
+        
+    </script>
+</body>
+</html>
